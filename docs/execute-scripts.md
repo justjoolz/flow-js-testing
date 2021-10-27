@@ -80,8 +80,21 @@ Cadence files.
 | `name` | string |          | name of the file in `scripts` folder to use (sans `.cdc` extension)                                    |
 | `args` | [Any]  | ✅       | an array of arguments to pass to script. Optional if scripts don't expect any arguments. Default: `[]` |
 
+#### Returns
+
+By default returns a Promise. If RETURN_ERRORS flag is set in flow.json or passed to the init function options object it will return [result,error] tuple.
+
+"testing" : {
+		"errors": {
+			"RETURN_ERRORS": true
+		} 
+}
+
+*This will become default in next release.*
+
 #### Usage
 
+### Current
 ```javascript
 import path from "path";
 import { init, emulator, executeScript } from "flow-js-testing";
@@ -114,4 +127,30 @@ const main = async () => {
 main();
 ```
 
+### New
+
+```javascript
+import path from "path";
+import { init, emulator, executeScript } from "flow-js-testing";
+
+const main = async () => {
+  const basePath = path.resolve(__dirname, "../cadence");
+  const port = 8080;
+
+  // Init framework
+  init(basePath, port);
+  // Start emulator
+  await emulator.start(port, false);
+
+  // Define arguments we want to pass
+  const args = ["Hello, from Cadence"];
+
+  const [result,error] = await executeScript("log-message", args);
+  console.log({ result }, error);
+  
+  await emulator.stop();
+};
+
+main();
+```
 📣 Note about method usage

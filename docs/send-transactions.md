@@ -33,7 +33,21 @@ Provides explicit control over how you pass values.
 > 📣 Pass `addressMap` only in cases, when you would want to override deployed contract. Otherwide
 > imports can be resolved automatically without explicitly passing them via `addressMap` field
 
+#### Returns
+
+By default returns a Promise. If RETURN_ERRORS flag is set in flow.json or passed to the init function options object it will return [result,error] tuple.
+
+"testing" : {
+		"errors": {
+			"RETURN_ERRORS": true
+		} 
+}
+
+*This will become default in next release.*
+
 #### Usage
+
+### Current
 
 ```javascript
 import path from "path";
@@ -76,6 +90,44 @@ const main = async () => {
 main();
 ```
 
+### New
+
+
+```javascript
+import path from "path";
+import { init, emulator, sendTransaction, getAccountAddress } from "flow-js-testing";
+
+const main = async () => {
+  const basePath = path.resolve(__dirname, "../cadence");
+  const port = 8080;
+
+  // Init framework
+  await init(basePath, { port });
+  // Start emulator
+  await emulator.start(port);
+
+  // Define code and arguments we want to pass
+  const code = `
+    transaction(message: String){
+      prepare(signer: AuthAccount){
+        log(message)
+      }
+    }
+  `;
+  const args = ["Hello, from Cadence"];
+  const Alice = await getAccountAddress("Alice");
+  const signers = [Alice];
+
+  const [tx, error] = await sendTransaction({ code, args, signers });
+  console.log({ tx }, error);
+  
+  // Stop emulator instance
+  await emulator.stop();
+};
+
+main();
+```
+
 ## `sendTransaction(name, signers, args)`
 
 This signature provides simplified way to send a transaction, since most of the time you will utilize existing
@@ -89,6 +141,7 @@ Cadence files.
 
 #### Usage
 
+### Current
 ```javascript
 import path from "path";
 import { init, emulator, sendTransaction } from "flow-js-testing";
@@ -111,6 +164,30 @@ const main = async () => {
   } catch (e) {
     console.error(e);
   }
+};
+
+main();
+```
+
+### New
+```javascript
+import path from "path";
+import { init, emulator, sendTransaction } from "flow-js-testing";
+
+const main = async () => {
+  const basePath = path.resolve(__dirname, "../cadence");
+  const port = 8080;
+
+  // Init framework
+  await init(basePath, { port });
+  // Start emulator
+  await emulator.start(port);
+
+  // Define arguments we want to pass
+  const args = ["Hello, Cadence"];
+
+  const [tx, error] = await sendTransaction("log-message", [], args);
+  console.log({ tx }, error);
 };
 
 main();
