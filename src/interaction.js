@@ -131,6 +131,15 @@ export const extractParameters = (ixType) => {
  * @returns {Promise<any>}
  */
 export const sendTransaction = async (...props) => {
+  const returnErrors = await config().get("RETURN_ERRORS");
+  if (returnErrors === true) {
+    return newSendTransaction(...props)
+  } else {
+    return oldSendTransaction(...props)
+  }
+}
+
+export const oldSendTransaction = async (...props) => {
   const extractor = extractParameters("tx");
   const { code, args, signers } = await extractor(props);
 
@@ -161,6 +170,43 @@ export const sendTransaction = async (...props) => {
   return await fcl.tx(response).onceExecuted();
 };
 
+
+export const newSendTransaction = async (...props) => {
+  try {
+    const extractor = extractParameters("tx");
+    const { code, args, signers } = await extractor(props);
+  
+    const serviceAuth = authorization();
+  
+    // set repeating transaction code
+    const ix = [
+      fcl.transaction(code),
+      fcl.payer(serviceAuth),
+      fcl.proposer(serviceAuth),
+      fcl.limit(999),
+    ];
+  
+    // use signers if specified
+    if (signers) {
+      const auths = signers.map((address) => authorization(address));
+      ix.push(fcl.authorizations(auths));
+    } else {
+      // and only service account if no signers
+      ix.push(fcl.authorizations([serviceAuth]));
+    }
+  
+    // add arguments if any
+    if (args) {
+      ix.push(fcl.args(resolveArguments(args, code)));
+    }
+    const response = await fcl.send(ix);
+    const result = await fcl.tx(response).onceExecuted();
+    return [result, null]
+  } catch (e) {
+    return [null, e]
+  }
+};
+
 /**
  * Sends script code for execution. Returns decoded value
  * @param {string} props.code - Cadence code of the script to be submitted.
@@ -169,6 +215,15 @@ export const sendTransaction = async (...props) => {
  * @returns {Promise<*>}
  */
 export const executeScript = async (...props) => {
+  const returnErrors = await config().get("RETURN_ERRORS");
+  if (returnErrors === true) {
+    return newExecuteScript(...props)
+  } else {
+    return oldExecuteScript(...props)
+  }
+}
+
+export const oldExecuteScript = async (...props) => {
   const extractor = extractParameters("script");
   const { code, args } = await extractor(props);
 
@@ -180,3 +235,21 @@ export const executeScript = async (...props) => {
   const response = await fcl.send(ix);
   return fcl.decode(response);
 };
+
+export const newExecuteScript = async (...props) => {
+  try {
+      const extractor = extractParameters("script");
+      const { code, args } = await extractor(props);
+      
+      const ix = [fcl.script(code)];
+      // add arguments if any
+      if (args) {
+        ix.push(fcl.args(resolveArguments(args, code)));
+      }
+      const response = await fcl.send(ix);
+      const result = await fcl.decode(response);
+      return [result, null]
+  } catch (e) {
+      return [null, e]
+  }
+}
