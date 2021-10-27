@@ -1,4 +1,9 @@
 {
+	"testing" : {
+		"errors": {
+			"RETURN_ERRORS": true
+		} 
+	},
 	"emulators": {
 		"default": {
 			"port": 3569,

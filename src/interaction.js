@@ -133,10 +133,10 @@ export const extractParameters = (ixType) => {
  */
 export const sendTransaction = async (...props) => {
   const returnErrors = await config().get("RETURN_ERRORS");
-  if (returnErrors === true) {
-    return newSendTransaction(...props);
+  if (returnErrors.RETURN_ERRORS === true) {
+    return newSendTransaction(...props); // returns [result,error]
   } else {
-    return oldSendTransaction(...props);
+    return oldSendTransaction(...props); // return Promise
   }
 };
 
@@ -216,7 +216,7 @@ export const newSendTransaction = async (...props) => {
  */
 export const executeScript = async (...props) => {
   const returnErrors = await config().get("RETURN_ERRORS");
-  if (returnErrors === true) {
+  if (returnErrors.RETURN_ERRORS === true) {
     return newExecuteScript(...props);
   } else {
     return oldExecuteScript(...props);
