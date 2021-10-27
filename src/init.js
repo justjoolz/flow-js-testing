@@ -28,7 +28,7 @@ import { config } from "@onflow/config";
  * @param {bool}   [props.returnErrors] - flag for returning [result, error] tuple 
  */
 export const init = async (basePath, props = {}) => {
-  const { port = 8080, returnErrors = false } = props;
+  const { port = 8080, returnErrors } = props;
   const { pkey = "48a1f554aeebf6bf9fe0d7b5b79d080700b073ee77909973ea0b2f6fbc902" } = props;
   set("PRIVATE_KEY", process.env.PK, "accounts/emulator-account/key", pkey);
   set(
