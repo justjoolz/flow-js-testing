@@ -23,6 +23,7 @@ import { getTransactionCode, getScriptCode, defaultsByName } from "./file";
 import { resolveImports, replaceImportAddresses } from "./imports";
 import { getServiceAddress } from "./manager";
 import { isObject } from "./utils";
+import { config } from "@onflow/config"
 
 export const unwrap = (arr, convert) => {
   const type = arr[arr.length - 1];
