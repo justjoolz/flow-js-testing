@@ -23,7 +23,7 @@ import { getTransactionCode, getScriptCode, defaultsByName } from "./file";
 import { resolveImports, replaceImportAddresses } from "./imports";
 import { getServiceAddress } from "./manager";
 import { isObject } from "./utils";
-import { config } from "@onflow/config"
+import { config } from "@onflow/config";
 
 export const unwrap = (arr, convert) => {
   const type = arr[arr.length - 1];
@@ -134,11 +134,11 @@ export const extractParameters = (ixType) => {
 export const sendTransaction = async (...props) => {
   const returnErrors = await config().get("RETURN_ERRORS");
   if (returnErrors === true) {
-    return newSendTransaction(...props)
+    return newSendTransaction(...props);
   } else {
-    return oldSendTransaction(...props)
+    return oldSendTransaction(...props);
   }
-}
+};
 
 export const oldSendTransaction = async (...props) => {
   const extractor = extractParameters("tx");
@@ -171,14 +171,13 @@ export const oldSendTransaction = async (...props) => {
   return await fcl.tx(response).onceExecuted();
 };
 
-
 export const newSendTransaction = async (...props) => {
   try {
     const extractor = extractParameters("tx");
     const { code, args, signers } = await extractor(props);
-  
+
     const serviceAuth = authorization();
-  
+
     // set repeating transaction code
     const ix = [
       fcl.transaction(code),
@@ -186,7 +185,7 @@ export const newSendTransaction = async (...props) => {
       fcl.proposer(serviceAuth),
       fcl.limit(999),
     ];
-  
+
     // use signers if specified
     if (signers) {
       const auths = signers.map((address) => authorization(address));
@@ -195,16 +194,16 @@ export const newSendTransaction = async (...props) => {
       // and only service account if no signers
       ix.push(fcl.authorizations([serviceAuth]));
     }
-  
+
     // add arguments if any
     if (args) {
       ix.push(fcl.args(resolveArguments(args, code)));
     }
     const response = await fcl.send(ix);
     const result = await fcl.tx(response).onceExecuted();
-    return [result, null]
+    return [result, null];
   } catch (e) {
-    return [null, e]
+    return [null, e];
   }
 };
 
@@ -218,11 +217,11 @@ export const newSendTransaction = async (...props) => {
 export const executeScript = async (...props) => {
   const returnErrors = await config().get("RETURN_ERRORS");
   if (returnErrors === true) {
-    return newExecuteScript(...props)
+    return newExecuteScript(...props);
   } else {
-    return oldExecuteScript(...props)
+    return oldExecuteScript(...props);
   }
-}
+};
 
 export const oldExecuteScript = async (...props) => {
   const extractor = extractParameters("script");
@@ -239,18 +238,18 @@ export const oldExecuteScript = async (...props) => {
 
 export const newExecuteScript = async (...props) => {
   try {
-      const extractor = extractParameters("script");
-      const { code, args } = await extractor(props);
-      
-      const ix = [fcl.script(code)];
-      // add arguments if any
-      if (args) {
-        ix.push(fcl.args(resolveArguments(args, code)));
-      }
-      const response = await fcl.send(ix);
-      const result = await fcl.decode(response);
-      return [result, null]
+    const extractor = extractParameters("script");
+    const { code, args } = await extractor(props);
+
+    const ix = [fcl.script(code)];
+    // add arguments if any
+    if (args) {
+      ix.push(fcl.args(resolveArguments(args, code)));
+    }
+    const response = await fcl.send(ix);
+    const result = await fcl.decode(response);
+    return [result, null];
   } catch (e) {
-      return [null, e]
+    return [null, e];
   }
-}
+};
