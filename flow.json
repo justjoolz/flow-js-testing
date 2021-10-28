@@ -1,7 +1,7 @@
 {
 	"testing" : {
 		"errors": {
-			"RETURN_ERRORS": true
+			"RETURN_ERRORS": false
 		} 
 	},
 	"emulators": {

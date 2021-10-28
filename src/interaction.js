@@ -134,8 +134,10 @@ export const extractParameters = (ixType) => {
 export const sendTransaction = async (...props) => {
   const returnErrors = await config().get("RETURN_ERRORS");
   if (returnErrors.RETURN_ERRORS === true) {
+    console.log("NEW SEND TRANSACTION RAN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
     return newSendTransaction(...props); // returns [result,error]
   } else {
+    console.log("OLD SEND TRANSACTION RAN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
     return oldSendTransaction(...props); // return Promise
   }
 };
