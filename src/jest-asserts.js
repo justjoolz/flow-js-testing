@@ -36,9 +36,13 @@ export const promise = async (ix) => {
  * @returns Promise<*> - transaction result
  * */
 export const shallPass = async (ix) => {
-  const wrappedInteraction = promise(ix);
-  await expect(wrappedInteraction).resolves.not.toBe(null);
-  await expect(wrappedInteraction).resolves.not.toThrow();
+  const [result, e] = promise(ix);
+  // await expect(wrappedInteraction).resolves.not.toBe(null); // already cought this
+  // await expect(wrappedInteraction).resolves.not.toThrow(); // same
+  // here need to get a response from an interaction, ensure that result is ok
+  // w/ status 4, etc.
+  // expect results error message to be 4
+  // expect error to be empty string
 
   wrappedInteraction.then(({ status, errorMessage }) => {
     expect(status).toBe(4);
@@ -55,7 +59,7 @@ export const shallPass = async (ix) => {
  * */
 export const shallResolve = async (ix) => {
   const wrappedInteraction = promise(ix);
-  await expect(wrappedInteraction).resolves.not.toThrow();
+  // await expect(wrappedInteraction).resolves.not.toThrow();
 
   return wrappedInteraction;
 };
@@ -67,7 +71,9 @@ export const shallResolve = async (ix) => {
  * */
 export const shallRevert = async (ix) => {
   const wrappedInteraction = promise(ix);
-  await expect(wrappedInteraction).rejects.not.toBe(null);
+  // await expect(wrappedInteraction).rejects.not.toBe(null);
+
+  // expect that error coming from wrappedinteraction is not going to be null
 };
 
 /**
@@ -77,6 +83,9 @@ export const shallRevert = async (ix) => {
  * */
 export const shallThrow = async (ix) => {
   const wrappedInteraction = promise(ix);
-  await expect(wrappedInteraction).rejects.not.toBe(null);
-  await expect(wrappedInteraction).rejects.toThrow();
+  // await expect(wrappedInteraction).rejects.not.toBe(null);
+  // await expect(wrappedInteraction).rejects.toThrow();
+
+  // expect that error coming from wrappedinteraction is not going to be null
+
 };

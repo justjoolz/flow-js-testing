@@ -135,9 +135,11 @@ export const sendTransaction = async (...props) => {
   const returnErrors = await config().get("RETURN_ERRORS");
   if (returnErrors.RETURN_ERRORS === true) {
     console.log("NEW SEND TRANSACTION RAN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+    // console.log(props);
     return newSendTransaction(...props); // returns [result,error]
   } else {
     console.log("OLD SEND TRANSACTION RAN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+    // console.log(props);
     return oldSendTransaction(...props); // return Promise
   }
 };
@@ -174,33 +176,34 @@ export const oldSendTransaction = async (...props) => {
 };
 
 export const newSendTransaction = async (...props) => {
+  const extractor = extractParameters("tx");
+  const { code, args, signers } = await extractor(props);
+
+  const serviceAuth = authorization();
+
+  // set repeating transaction code
+  const ix = [
+    fcl.transaction(code),
+    fcl.payer(serviceAuth),
+    fcl.proposer(serviceAuth),
+    fcl.limit(999),
+  ];
+
+  // use signers if specified
+  if (signers) {
+    const auths = signers.map((address) => authorization(address));
+    ix.push(fcl.authorizations(auths));
+  } else {
+    // and only service account if no signers
+    ix.push(fcl.authorizations([serviceAuth]));
+  }
+
+  // add arguments if any
+  if (args) {
+    ix.push(fcl.args(resolveArguments(args, code)));
+  }
+
   try {
-    const extractor = extractParameters("tx");
-    const { code, args, signers } = await extractor(props);
-
-    const serviceAuth = authorization();
-
-    // set repeating transaction code
-    const ix = [
-      fcl.transaction(code),
-      fcl.payer(serviceAuth),
-      fcl.proposer(serviceAuth),
-      fcl.limit(999),
-    ];
-
-    // use signers if specified
-    if (signers) {
-      const auths = signers.map((address) => authorization(address));
-      ix.push(fcl.authorizations(auths));
-    } else {
-      // and only service account if no signers
-      ix.push(fcl.authorizations([serviceAuth]));
-    }
-
-    // add arguments if any
-    if (args) {
-      ix.push(fcl.args(resolveArguments(args, code)));
-    }
     const response = await fcl.send(ix);
     const result = await fcl.tx(response).onceExecuted();
     return [result, null];
@@ -239,15 +242,16 @@ export const oldExecuteScript = async (...props) => {
 };
 
 export const newExecuteScript = async (...props) => {
-  try {
-    const extractor = extractParameters("script");
-    const { code, args } = await extractor(props);
+  const extractor = extractParameters("script");
+  const { code, args } = await extractor(props);
 
-    const ix = [fcl.script(code)];
-    // add arguments if any
-    if (args) {
-      ix.push(fcl.args(resolveArguments(args, code)));
-    }
+  const ix = [fcl.script(code)];
+  // add arguments if any
+  if (args) {
+    ix.push(fcl.args(resolveArguments(args, code)));
+  }
+
+  try {
     const response = await fcl.send(ix);
     const result = await fcl.decode(response);
     return [result, null];

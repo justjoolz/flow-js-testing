@@ -3,10 +3,12 @@ import {
   emulator,
   init,
   deployContractByName,
-  // getContractAddress,
-  // getAccountAddress,
-  // getServiceAddress,
+  getContractAddress,
+  getAccountAddress,
+  getServiceAddress
 } from "../src";
+import { getManagerAddress } from "../src/manager"
+// import { getManagerAddress } from "../src/generated/scripts/getManagerAddress";
 
 // We need to set timeout for a higher number, cause some transactions might take up some time
 jest.setTimeout(10000);
@@ -28,15 +30,19 @@ describe("interactions - sendTransaction", () => {
   test("deploy basic contract - to service account", async () => {
     const name = "HelloWorld";
 
+    const containerAddress = await getManagerAddress();
+    console.log({containerAddress});
+
     // const [result, e] = await deployContractByName({ name });
-    const result = await deployContractByName({ name });
-    console.log("RESULT::::::::::::::::::::::::::::", result);
+    // const result = await deployContractByName({ name });
+    // console.log("RESULT::::::::::::::::::::::::::::", result);
     // console.log("E::::::::::::::::::::::::::::", e);
 
-    // await deployContractByName({ name });
-    // const address = await getContractAddress(name);
-    // const serviceAccount = await getServiceAddress();
-    // expect(address).toBe(serviceAccount);
+    await deployContractByName({ name });
+
+    const [ address ]= await getContractAddress(name);
+    const serviceAccount = await getServiceAddress();
+    expect(address).toBe(serviceAccount);
   });
 
   // test("deploy basic contract - to service account, short notation", async () => {

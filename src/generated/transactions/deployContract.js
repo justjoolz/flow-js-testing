@@ -21,9 +21,7 @@ transaction(name:String, code: String, manager: Address ##ARGS-WITH-TYPES##) {
         )
 
         let linkPath = FlowManager.contractManagerPath
-        let contractManager = getAccount(manager)
-                    .getCapability(linkPath)!
-                    .borrow<&FlowManager.Mapper>()!
+        let contractManager = getAccount(manager).getCapability(linkPath)!.borrow<&FlowManager.Mapper>()!
 
         let address = acct.address
         contractManager.setAddress(name, address: address)
