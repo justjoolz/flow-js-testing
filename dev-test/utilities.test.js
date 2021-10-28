@@ -25,7 +25,7 @@ describe("block height offset", () => {
   // Instantiate emulator and path to Cadence files
   beforeEach(async () => {
     const base = path.resolve(__dirname, "../cadence");
-    const port = 8080;
+    const port = 8082;
     await init({ base }, { port });
     return emulator.start(port);
   });
@@ -57,10 +57,9 @@ describe("block height offset", () => {
     const FlowManager = await getManagerAddress();
     const addressMap = { FlowManager };
 
-    const [result, err] = await getBlockOffset({ addressMap });
+    const result = await getBlockOffset({ addressMap });
 
     expect(result).toBe(0);
-    expect(err).toBe(null);
   });
 
   it("should update offset with utility method", async () => {
@@ -69,22 +68,16 @@ describe("block height offset", () => {
     const FlowManager = await getManagerAddress();
     const addressMap = { FlowManager };
 
-    const [oldOffset, err] = await getBlockOffset({ addressMap });
-    expect(err).toBe(null);
+    const oldOffset = await getBlockOffset({ addressMap });
     expect(oldOffset).toBe(0);
 
     const offset = 42;
-    const args = [offset];
-    const payer = authorization(FlowManager);
-    const signers = [payer];
 
-    const [txResult, txErr] = await setBlockOffset({ args, signers, payer, addressMap });
+    const txResult = await setBlockOffset(offset);
     expect(txResult.errorMessage).toBe("");
-    expect(txErr).toBe(null);
 
-    const [newOffset, newErr] = await getBlockOffset({ addressMap });
+    const newOffset = await getBlockOffset({ addressMap });
     expect(newOffset).toBe(offset);
-    expect(newErr).toBe(null);
   });
 });
 
