@@ -23,7 +23,7 @@ describe("metadata examples", () => {
     `;
     const name = "Cadence";
     const args = [{ name }];
-    const result = await shallResolve(executeScript({ code, args }));
+    const [result] = await shallResolve(executeScript({ code, args }));
     expect(result).toBe(name);
   });
 
@@ -35,7 +35,7 @@ describe("metadata examples", () => {
     `;
     const answer = 42;
     const args = [{ answer }];
-    const result = await shallResolve(executeScript({ code, args }));
+    const [result ] = await shallResolve(executeScript({ code, args }));
     expect(result).toBe(answer);
   });
 
@@ -47,7 +47,7 @@ describe("metadata examples", () => {
     `;
     const value = "test";
     const args = [[value]];
-    const result = await shallResolve(executeScript({ code, args }));
+    const [result] = await shallResolve(executeScript({ code, args }));
     expect(result).toBe(value);
   });
 
@@ -66,7 +66,7 @@ describe("metadata examples", () => {
     const args = [[value], index];
 
     try {
-      const result = await executeScript({ code, args });
+      const [result] = await executeScript({ code, args });
       expect(result).toBe(value[index]);
     } catch (e) {
       console.error(e);
