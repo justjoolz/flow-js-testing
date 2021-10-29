@@ -36,14 +36,14 @@ describe("block height offset", () => {
   });
 
   it("should return zero offset", async () => {
-    const [result] = await executeScript("get-block-offset");
-    expect(result).toBe(0);
+    const [zeroOffset] = await executeScript("get-block-offset");
+    expect(zeroOffset).toBe(0);
   });
 
   it("should update offset", async () => {
     const manager = await getServiceAddress();
-    const [result] = await executeScript("get-block-offset");
-    expect(result).toBe(0);
+    const [updateOffset] = await executeScript("get-block-offset");
+    expect(updateOffset).toBe(0);
 
     const offset = 42;
     await shallPass(sendTransaction("set-block-offset", [manager], [offset]));
@@ -57,9 +57,9 @@ describe("block height offset", () => {
     const FlowManager = await getManagerAddress();
     const addressMap = { FlowManager };
 
-    const [result] = await getBlockOffset({ addressMap });
+    const [offSet] = await getBlockOffset({ addressMap });
 
-    expect(result).toBe(0);
+    expect(offSet).toBe(0);
   });
 
   it("should update offset with utility method", async () => {
@@ -96,13 +96,13 @@ describe("block height offset utilities", () => {
   });
 
   it("should return 0 for initial block offset", async () => {
-    const [result] = await shallResolve(manager.getBlockOffset());
-    expect(result).toBe(0);
+    const [initialOffset] = await shallResolve(manager.getBlockOffset());
+    expect(initialOffset).toBe(0);
   });
 
   it("should update block offset", async () => {
-    const [initialOffset] = await shallResolve(manager.getBlockOffset());
-    expect(initialOffset).toBe(0);
+    const [offset] = await shallResolve(manager.getBlockOffset());
+    expect(offset).toBe(0);
 
     const blockOffset = 42;
     await shallPass(manager.setBlockOffset(blockOffset));

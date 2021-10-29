@@ -46,7 +46,6 @@ export const getContractAddress = async (name, useDefaults = false) => {
   };
 
   let contractAddress;
-  // try {
   const code = await registry.scripts.getContractAddressTemplate(addressMap);
   const args = [
     [name, t.String],
@@ -57,9 +56,6 @@ export const getContractAddress = async (name, useDefaults = false) => {
     args,
     service: true,
     });
-  // } catch (e) {
-  //   console.error("failed to get account address:", e);
-  // }
 
   return contractAddress;
 };
