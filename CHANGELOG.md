@@ -9,31 +9,28 @@
  *BREAKING CHANGES*
 
 - sendTransaction and exectureScript functions now return a tuple of [result, error]
-
-- **Any code that relies upon checking the result and expects only the result will need to be refactored.**
-
-- For examples of new usage see the [script](/docs/exeute-scripts.md) and [transaction](/docs/send-transactions.md) documentation.
-
-```javascript
-    // Scripts
-
-    // Old usage
-    const result = await executeScript({ code, args });
-    const result = await executeScript("log-message", args);
-
-    // New usage
-    const [result,error] = await executeScript({ code, args });
-    const [result,error] = await executeScript("log-message", args);
+- As do the following functions:
     
-    
-    // Transactions
+    - updateContract
+    - setBlockOffset
+    - scratch
+    - registerContract
+    - mintTokens
+    - initManager
+    - deployContract
+    - createAccount
+    - setBlockOffset
+    - mintFlow
   
-    // Old usage
-    const tx = await sendTransaction({ code, args, signers });
-    const tx = await sendTransaction("log-message", [], args);    
+    - getManagerAddress
+    - getContractAddress
+    - getBlockOffset
+    - getBalance
+    - getAccountAddress
+    - checkManager
+    - getBlockOffset
+    - getFlowBalance
 
-    // New usage
-    const [tx, error] = await sendTransaction({ code, args, signers });
-    const [tx, error] = await sendTransaction("log-message", [], args);
+- **Any code that relies upon checking the result of any of these functions and expects only the result returned will need to be refactored.**
 
-```
+- For examples of new usage see the [script](/docs/exeute-scripts.md), [transaction](/docs/send-transactions.md) and [api](/docs/api.md) documentation.
