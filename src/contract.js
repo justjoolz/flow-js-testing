@@ -50,7 +50,7 @@ export const getContractAddress = async (name, useDefaults = false) => {
     [name, t.String],
     [managerAddress, t.Address],
   ];
-  const [contractAddress] = await executeScript({
+  const contractAddress = await executeScript({
     code,
     args,
     service: true,
