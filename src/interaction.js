@@ -239,16 +239,16 @@ export const oldExecuteScript = async (...props) => {
 };
 
 export const newExecuteScript = async (...props) => {
-  const extractor = extractParameters("script");
-  const { code, args } = await extractor(props);
-
-  const ix = [fcl.script(code)];
-  // add arguments if any
-  if (args) {
-    ix.push(fcl.args(resolveArguments(args, code)));
-  }
-
   try {
+    const extractor = extractParameters("script");
+    const { code, args } = await extractor(props);
+
+    const ix = [fcl.script(code)];
+    // add arguments if any
+    if (args) {
+      ix.push(fcl.args(resolveArguments(args, code)));
+    }
+
     const response = await fcl.send(ix);
     const result = await fcl.decode(response);
     return [result, null];
