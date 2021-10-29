@@ -586,8 +586,8 @@ const main = async () => {
   // "transformers" field expects array of functions to operate update the code.
   // We will pass single operator "builtInMethods" provided by the framework
   const transformers = [builtInMethods];
-  const result = await executeScript({ code, transformers });
-  console.log({ result });
+  const [result, error] = await executeScript({ code, transformers });
+  console.log( result , error);
 
   await emulator.stop();
 };
@@ -657,7 +657,7 @@ describe("interactions - sendTransaction", () => {
     const signers = [Alice];
     const args = ["Hello, Cadence"];
 
-    const txResult = await shallPass(
+    const [txResult, error] = await shallPass(
       sendTransaction({
         code,
         signers,
@@ -666,7 +666,7 @@ describe("interactions - sendTransaction", () => {
     );
 
     // Transaction result will hold status, events and error message
-    console.log(txResult);
+    console.log(txResult, error);
   });
 });
 ```
@@ -728,7 +728,7 @@ describe("interactions - sendTransaction", () => {
     const signers = [Alice];
     const args = ["Hello, Cadence"];
 
-    const txResult = await shallRevert(
+    const [txResult, error] = await shallRevert(
       sendTransaction({
         code,
         signers,
@@ -737,7 +737,7 @@ describe("interactions - sendTransaction", () => {
     );
 
     // Transaction result will hold status, events and error message
-    console.log(txResult);
+    console.log(txResult, error);
   });
 });
 ```
@@ -857,14 +857,8 @@ const main = async () => {
   `;
   const args = ["Hello, from Cadence"];
 
-  // If something wrong with script execution method will throw an error,
-  // so we need to catch it and process
-  try {
-    const result = await executeScript({ code, args });
-    console.log({ result });
-  } catch (e) {
-    console.error(e);
-  }
+  const [result, error] = await executeScript({ code, args });
+  console.log(result, error);
 
   // Stop emulator instance
   await emulator.stop();
@@ -909,15 +903,9 @@ const main = async () => {
   // Define arguments we want to pass
   const args = ["Hello, from Cadence"];
 
-  // If something wrong with script execution method will throw an error,
-  // so we need to catch it and process
-  try {
-    // We assume there is a file `scripts/log-message.cdc` under base path
-    const result = await executeScript("log-message", args);
-    console.log({ result });
-  } catch (e) {
-    console.error(e);
-  }
+  // We assume there is a file `scripts/log-message.cdc` under base path
+  const [result, error] = await executeScript("log-message", args);
+  console.log(result, error);
 
   await emulator.stop();
 };
@@ -991,14 +979,8 @@ const main = async () => {
   const Alice = await getAccountAddress("Alice");
   const signers = [Alice];
 
-  // If something wrong with transaction execution method will throw an error,
-  // so we need to catch it and process
-  try {
-    const tx = await sendTransaction({ code, args, signers });
-    console.log({ tx });
-  } catch (e) {
-    console.error(e);
-  }
+  const [tx, error] = await sendTransaction({ code, args, signers });
+  console.log(tx, error);
 
   // Stop emulator instance
   await emulator.stop();
@@ -1044,12 +1026,8 @@ const main = async () => {
   const Alice = await getAccountAddress("Alice");
   const signers = [Alice];
 
-  try {
-    const tx = await sendTransaction("log-message", [Alice], args);
-    console.log({ tx });
-  } catch (e) {
-    console.error(e);
-  }
+  const [tx, error] = await sendTransaction("log-message", [Alice], args);
+  console.log(tx, error);
 };
 
 main();

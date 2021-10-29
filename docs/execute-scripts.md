@@ -53,7 +53,7 @@ const main = async () => {
   const args = ["Hello, from Cadence"];
 
   const [result,e] = await executeScript({ code, args });
-  console.log({ result }, e);
+  console.log(result, e);
 
   // Stop emulator instance
   await emulator.stop();
@@ -93,7 +93,7 @@ const main = async () => {
   const args = ["Hello, from Cadence"];
 
   const [result,error] = await executeScript("log-message", args);
-  console.log({ result }, error);
+  console.log(result, error);
   
   await emulator.stop();
 };

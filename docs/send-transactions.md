@@ -61,7 +61,7 @@ const main = async () => {
   const signers = [Alice];
 
   const [tx, error] = await sendTransaction({ code, args, signers });
-  console.log({ tx }, error);
+  console.log(tx, error);
   
   // Stop emulator instance
   await emulator.stop();
@@ -100,7 +100,7 @@ const main = async () => {
   const args = ["Hello, Cadence"];
 
   const [tx, error] = await sendTransaction("log-message", [], args);
-  console.log({ tx }, error);
+  console.log(tx, error);
 };
 
 main();
