@@ -22,11 +22,10 @@ of emulator to be run in parallel.
 
 #### Options
 
-| Name           | Type | Optional | Description                          |
-| -------------- | ---- | -------- | ------------------------------------ |
-| `port`         |      | ✅       | http port for access node            |
-| `pkey`         |      | ✅       | private key for service account      |
-| `returnErrors` |      | ✅       | flag to enable [result,error] tuple  |
+| Name   | Type | Optional | Description                     |
+| ------ | ---- | -------- | ------------------------------- |
+| `port` |      | ✅       | http port for access node       |
+| `pkey` |      | ✅       | private key for service account |
 
 #### Usage
 
