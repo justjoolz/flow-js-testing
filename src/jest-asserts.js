@@ -36,7 +36,7 @@ export const promise = async (ix) => {
  * @returns Promise<*> - transaction result
  * */
 export const shallPass = async (ix) => {
-  const [result, e] = await promise(ix);
+  const [result] = await promise(ix);
   const { status, errorMessage } = result;
   await expect(status).toBe(4);
   await expect(errorMessage).toBe("");
@@ -51,8 +51,6 @@ export const shallPass = async (ix) => {
  * */
 export const shallResolve = async (ix) => {
   const wrappedInteraction = promise(ix);
-  // await expect(wrappedInteraction).resolves.not.toThrow();
-
   return wrappedInteraction;
 };
 
