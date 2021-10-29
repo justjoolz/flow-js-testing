@@ -52,14 +52,8 @@ const main = async () => {
   `;
   const args = ["Hello, from Cadence"];
 
-  // If something goes wrong with script execution method will throw an error,
-  // so we need to catch it and process
-  try {
-    const result = await executeScript({ code, args });
-    console.log({ result });
-  } catch (e) {
-    console.error(e);
-  }
+  const [result,e] = await executeScript({ code, args });
+  console.log({ result }, e);
 
   // Stop emulator instance
   await emulator.stop();
