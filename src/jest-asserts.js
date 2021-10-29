@@ -75,9 +75,14 @@ export const shallResolve = async (ix) => {
  * */
 export const shallRevert = async (ix) => {
   const wrappedInteraction = promise(ix);
-  // await expect(wrappedInteraction).rejects.not.toBe(null);
-
-  // expect that error coming from wrappedinteraction is not going to be null
+  let resolvedError;
+  try {
+    const [_, error] = await wrappedInteraction;
+    resolvedError = error;
+  } catch (error) {
+    resolvedError = "ERROR!";
+  }
+  await expect(resolvedError).not.toBe(null);
 };
 
 /**
@@ -93,6 +98,7 @@ export const shallThrow = async (ix) => {
     resolvedError = error;
   } catch (error) {
     resolvedError = "ERROR!";
+    await expect(wrappedInteraction).rejects.toThrow();
   }
   await expect(resolvedError).not.toBe(null);
 };
