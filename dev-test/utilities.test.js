@@ -36,23 +36,20 @@ describe("block height offset", () => {
   });
 
   it("should return zero offset", async () => {
-    // const result = await executeScript("get-block-offset");
-    const [result, e] = await executeScript("get-block-offset");
-    console.log("RESULT::::::::::::::::::", result);
-    console.log("E:::::::::::::::::::::::", e);
+    const [result] = await executeScript("get-block-offset");
     expect(result).toBe(0);
   });
 
-//   it("should update offset", async () => {
-//     const manager = await getServiceAddress();
-//     const result = await executeScript("get-block-offset");
-//     expect(result).toBe(0);
+  it("should update offset", async () => {
+    const manager = await getServiceAddress();
+    const [result] = await executeScript("get-block-offset");
+    expect(result).toBe(0);
 
-//     const offset = 42;
-//     await shallPass(sendTransaction("set-block-offset", [manager], [offset]));
-//     const newOffset = await executeScript("get-block-offset");
-//     expect(newOffset).toBe(offset);
-//   });
+    const offset = 42;
+    await shallPass(sendTransaction("set-block-offset", [manager], [offset]));
+    const [newOffset] = await executeScript("get-block-offset");
+    expect(newOffset).toBe(offset);
+  });
 
 //   it("should read offset with utility method", async () => {
 //     // CadUt version of sending transactions and execution scripts don't have

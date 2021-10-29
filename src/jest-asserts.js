@@ -36,20 +36,12 @@ export const promise = async (ix) => {
  * @returns Promise<*> - transaction result
  * */
 export const shallPass = async (ix) => {
-  const [result, e] = promise(ix);
-  // await expect(wrappedInteraction).resolves.not.toBe(null); // already cought this
-  // await expect(wrappedInteraction).resolves.not.toThrow(); // same
-  // here need to get a response from an interaction, ensure that result is ok
-  // w/ status 4, etc.
-  // expect results error message to be 4
-  // expect error to be empty string
+  const [result, e] = await promise(ix);
+  const { status, errorMessage } = result;
+  await expect(status).toBe(4);
+  await expect(errorMessage).toBe("");
 
-  wrappedInteraction.then(({ status, errorMessage }) => {
-    expect(status).toBe(4);
-    expect(errorMessage).toBe("");
-  });
-
-  return wrappedInteraction;
+  return promise(ix);
 };
 
 /**
