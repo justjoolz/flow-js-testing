@@ -172,37 +172,38 @@ export const oldSendTransaction = async (...props) => {
 };
 
 export const newSendTransaction = async (...props) => {
-  const extractor = extractParameters("tx");
-  const { code, args, signers } = await extractor(props);
-
-  const serviceAuth = authorization();
-
-  // set repeating transaction code
-  const ix = [
-    fcl.transaction(code),
-    fcl.payer(serviceAuth),
-    fcl.proposer(serviceAuth),
-    fcl.limit(999),
-  ];
-
-  // use signers if specified
-  if (signers) {
-    const auths = signers.map((address) => authorization(address));
-    ix.push(fcl.authorizations(auths));
-  } else {
-    // and only service account if no signers
-    ix.push(fcl.authorizations([serviceAuth]));
-  }
-
-  // add arguments if any
-  if (args) {
-    ix.push(fcl.args(resolveArguments(args, code)));
-  }
-
   try {
+    const extractor = extractParameters("tx");
+    const { code, args, signers } = await extractor(props);
+
+    const serviceAuth = authorization();
+
+    // set repeating transaction code
+    const ix = [
+      fcl.transaction(code),
+      fcl.payer(serviceAuth),
+      fcl.proposer(serviceAuth),
+      fcl.limit(999),
+    ];
+
+    // use signers if specified
+    if (signers) {
+      const auths = signers.map((address) => authorization(address));
+      ix.push(fcl.authorizations(auths));
+    } else {
+      // and only service account if no signers
+      ix.push(fcl.authorizations([serviceAuth]));
+    }
+
+    // add arguments if any
+    if (args) {
+      ix.push(fcl.args(resolveArguments(args, code)));
+    }
     const response = await fcl.send(ix);
     const result = await fcl.tx(response).onceExecuted();
+
     return [result, null];
+
   } catch (e) {
     return [null, e];
   }
