@@ -90,12 +90,8 @@ const main = async () => {
   // inside of a contract template
   const args = [1337, "Hello", { name: "Alice" }];
 
-  try {
-    const deploymentResult = await deployContractByName({ to, name });
-    console.log({ deploymentResult });
-  } catch (e) {
-    // If we encounter any errors during teployment, we can catch and process them here
-    console.log(e);
+  const [deploymentResult, err] = await deployContractByName({ to, name });
+  console.log( deploymentResult, err );
   }
 
   await emulator.stop();
@@ -159,7 +155,7 @@ import { init, emulator, getAccountAddress, deployContract, executeScript } from
 
   await deployContract({ to, name, code, args });
 
-  const balance = await executeScript({
+  const [balance,err] = await executeScript({
     code: `
       import Wallet from 0x01
       pub fun main(): UInt{
@@ -167,7 +163,7 @@ import { init, emulator, getAccountAddress, deployContract, executeScript } from
       }
     `,
   });
-  console.log({ balance });
+  console.log(balance, err);
 
   await emulator.stop();
 })();
@@ -386,12 +382,8 @@ const main = async () => {
 
   const Alice = await getAccountAddress("Alice");
 
-  try {
-    const result = await getFlowBalance(Alice);
-    console.log({ result });
-  } catch (e) {
-    console.log(e);
-  }
+  const [result, error] = await getFlowBalance(Alice);
+  console.log( result, error );
 
   await emulator.stop();
 };
@@ -435,8 +427,8 @@ import { init, emulator, getAccountAddress, getFlowBalance, mintFlow } from "../
   const Alice = await getAccountAddress("Alice");
 
   // Get initial balance
-  const initialBalance = await getFlowBalance(Alice);
-  console.log({ initialBalance });
+  const [initialBalance] = await getFlowBalance(Alice);
+  console.log( initialBalance );
 
   // Add 1.0 FLOW tokens to Alice account
   await mintFlow(Alice, "1.0");
@@ -523,8 +515,8 @@ const main = async () => {
   init(basePath, port);
   await emulator.start(port);
 
-  const blockOffset = await getBlockOffset();
-  console.log({ blockOffset });
+  const [blockOffset, err] = await getBlockOffset();
+  console.log(blockOffset, err);
 
   await emulator.stop();
 };
@@ -573,8 +565,8 @@ const main = async () => {
   // Offset current block height by 42
   await setBlockOffset(42);
 
-  const blockOffset = await getBlockOffset();
-  console.log({ blockOffset });
+  const [blockOffset, err] = await getBlockOffset();
+  console.log(blockOffset, err);
 
   // "getCurrentBlock().height" in your Cadence code will be replaced by Manager to a mocked value
   const code = `
@@ -587,7 +579,7 @@ const main = async () => {
   // We will pass single operator "builtInMethods" provided by the framework
   const transformers = [builtInMethods];
   const [result, error] = await executeScript({ code, transformers });
-  console.log( result , error);
+  console.log(result, error);
 
   await emulator.stop();
 };
@@ -788,13 +780,14 @@ describe("interactions - sendTransaction", () => {
       }
     `;
 
-    const result = await shallResolve(
+    const [result, error] = await shallResolve(
       executeScript({
         code,
       }),
     );
 
     expect(result).toBe(42);
+    expect(error).toBe(null);
   });
 });
 ```
@@ -1106,7 +1099,7 @@ const main = async () => {
 
   // Let's assume we need to import MessageContract
   await deployContractByName({ name: "MessageContract" });
-  const MessageContract = await getContractAddress("MessageContract");
+  const [MessageContract] = await getContractAddress("MessageContract");
   const addressMap = { MessageContract };
 
   const contractTemplate = await getContractCode("HelloWorld", {
@@ -1152,7 +1145,7 @@ const main = async () => {
 
   // Let's assume we need to import MessageContract
   await deployContractByName({ name: "MessageContract" });
-  const MessageContract = await getContractAddress("MessageContract");
+  const [MessageContract] = await getContractAddress("MessageContract");
   const addressMap = { MessageContract };
 
   const txTemplate = await getTransactionCode({
@@ -1199,7 +1192,7 @@ const main = async () => {
 
   // Let's assume we need to import MessageContract
   await deployContractByName({ name: "MessageContract" });
-  const MessageContract = await getContractAddress("MessageContract");
+  const [MessageContract] = await getContractAddress("MessageContract");
   const addressMap = { MessageContract };
 
   const scriptTemplate = await getScriptCode({
