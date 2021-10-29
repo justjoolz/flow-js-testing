@@ -49,13 +49,13 @@ export const getManagerAddress = async () => {
   const code = await registry.scripts.checkManagerTemplate(addressMap);
 
   let [result, e] = await executeScript({
-      code,
-      service: true,
-    });
+    code,
+    service: true,
+  });
   if (e && result === null) {
     await initManager();
   }
-  
+
   return getServiceAddress();
 };
 

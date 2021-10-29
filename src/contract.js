@@ -54,7 +54,7 @@ export const getContractAddress = async (name, useDefaults = false) => {
     code,
     args,
     service: true,
-    });
+  });
 
   return contractAddress;
 };

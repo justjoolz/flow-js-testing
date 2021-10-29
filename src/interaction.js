@@ -163,7 +163,6 @@ export const sendTransaction = async (...props) => {
     const result = await fcl.tx(response).onceExecuted();
 
     return [result, null];
-
   } catch (e) {
     return [null, e];
   }
