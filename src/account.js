@@ -48,7 +48,7 @@ export const getAccountAddress = async (accountName) => {
       [managerAddress, t.Address],
     ];
 
-    const [result, e] = await executeScript({
+    const [result] = await executeScript({
       code,
       args,
       service: true,
@@ -65,7 +65,7 @@ export const getAccountAddress = async (accountName) => {
         [name, publicKey, t.String],
         [managerAddress, t.Address],
       ];
-      const [result, e] = await sendTransaction({
+      const [result] = await sendTransaction({
         code,
         args,
       });

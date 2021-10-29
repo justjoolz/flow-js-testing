@@ -52,10 +52,10 @@ export const getManagerAddress = async () => {
       code,
       service: true,
     });
-  if (e) {
+  if (e && result === null) {
     await initManager();
   }
-
+  
   return getServiceAddress();
 };
 

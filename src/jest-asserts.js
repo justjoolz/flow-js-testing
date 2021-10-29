@@ -77,8 +77,9 @@ export const shallRevert = async (ix) => {
   const wrappedInteraction = promise(ix);
   let resolvedError;
   try {
-    const [_, error] = await wrappedInteraction;
+    const [result, error] = await wrappedInteraction;
     resolvedError = error;
+    await expect(result).toBe(null);
   } catch (error) {
     resolvedError = "ERROR!";
   }
@@ -94,8 +95,9 @@ export const shallThrow = async (ix) => {
   const wrappedInteraction = promise(ix);
   let resolvedError;
   try {
-    const [_, error] = await wrappedInteraction;
+    const [result, error] = await wrappedInteraction;
     resolvedError = error;
+    await expect(result).toBe(null);
   } catch (error) {
     resolvedError = "ERROR!";
     await expect(wrappedInteraction).rejects.toThrow();
